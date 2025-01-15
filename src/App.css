@@ -1,0 +1,27 @@
+.layout {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    /* grid-template-columns: 300px 1fr; */
+    grid-template-areas:
+        "navbar navbar"
+        "sidebar main"
+        "sidebar footer";
+}
+
+.layout>nav {
+    grid-area: navbar;
+}
+
+.layout>aside {
+    height: calc(100vh - 24px);
+    grid-area: sidebar;
+}
+
+.layout>main {
+    grid-area: main;
+}
+
+.layout>footer {
+    grid-area: footer;
+}
