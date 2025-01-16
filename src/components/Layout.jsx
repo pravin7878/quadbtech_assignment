@@ -3,6 +3,7 @@ import "../App.css"
 import { Header } from "./Header";
 import Sidebar from "./Sidbar";
 import Home from "../pagas/Home";
+import { AllRoute } from "./AllRoute";
 
 const Layout = () => {
     const [isGrid, setisGrid] = useState(false)
@@ -39,7 +40,7 @@ const Layout = () => {
                 <Sidebar />
             </aside>
             <main className="w-full">
-                <Home />
+                <AllRoute />
             </main>
             <footer className="bg-purple-700">Footer</footer>
         </div>
