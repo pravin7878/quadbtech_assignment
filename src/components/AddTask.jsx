@@ -24,7 +24,7 @@ const [error, seterror] = useState(null)
         }
         else{
             seterror("")
-            dispatch(addTodo({token , taskData}))
+            dispatch(addTodo({token , todo : taskData}))
         }
     }
 

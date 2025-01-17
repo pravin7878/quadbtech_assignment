@@ -22,6 +22,7 @@ export const fetchTodos = createAsyncThunk(
 export const addTodo = createAsyncThunk(
   "todos/addTodo",
   async ({ token, todo }, { rejectWithValue }) => {
+    console.log({ token, todo });
     try {
       const response = await axios.post(`${API_URL}/todos`, todo, {
         headers: { Authorization: `Bearer ${token}` },
