@@ -45,7 +45,12 @@ const Sidebar = () => {
     const todayTask = 0
     const navigation = [
         {
-            path: '/all-task',
+            path: '/',
+            name: 'Home',
+            icon: ""
+        },
+        {
+            path: '/all-tasks',
             name: 'All Tasks',
             icon: ""
         },

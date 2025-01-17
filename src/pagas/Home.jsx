@@ -17,15 +17,18 @@ const {items , loading , error} = useSelector(state=>state.todos)
     <div>
        <AddTask/>
     </div>
-    <div>
+    <div className="px-2 py-3 flex flex-col justify-between rounded-md m-5">
       {items?.length === 0  ?
-    <div>No task found</div> 
+    <div>
+          <h3 className="p-4">No task found</h3>
+    </div> 
     :
-        items?.map((task,idx)=>{
-          console.log(task)
-          return <TaskCard task={task} />
-        }) 
-  
+    <>
+          {items?.map((task, idx) => {
+            console.log(task)
+            return <TaskCard key={idx} task={task} />
+          })}
+    </>
     }
     </div>
   </>
