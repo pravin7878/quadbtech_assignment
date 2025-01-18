@@ -23,12 +23,12 @@ const {items , loading , error} = useSelector(state=>state.todos)
           <h3 className="p-4">No task found</h3>
     </div> 
     :
-    <>
+    <div className="flex flex-col gap-3">
           {items?.map((task, idx) => {
             console.log(task)
             return <TaskCard key={idx} task={task} />
           })}
-    </>
+    </div>
     }
     </div>
   </>

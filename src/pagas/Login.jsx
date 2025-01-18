@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
-import { useNavigate } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 
 export const Login = () => {
     const [email, setEmail] = useState("")
@@ -92,7 +92,7 @@ const navigate = useNavigate()
                                     </div>
 
                                     <div className="text-center">
-                                        <p className="text-base text-gray-600">Don’t have an account? <a href="#" title="" className="font-medium text-orange-500 transition-all duration-200 hover:text-orange-600 hover:underline">Create a free account</a></p>
+                                        <p className="text-base text-gray-600">Don’t have an account? <Link to="/register" title="" className="font-medium text-orange-500 transition-all duration-200 hover:text-orange-600 hover:underline">Create a free account</Link></p>
                                     </div>
                                 </div>
                             </form>

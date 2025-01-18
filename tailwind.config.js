@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       gridTemplateAreas: {
-        layout: ["navbar navbar", "sidebar main", "sidebar footer"],
+        layout_sm: ["navbar navbar", "main main", "footer footer"],
+        layout_md: ["navbar navbar", "sidebar main", "sidebar footer"],
       },
     },
   },
