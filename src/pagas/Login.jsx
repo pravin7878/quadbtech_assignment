@@ -2,29 +2,29 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginUser } from '../redux/actions/user'
 import { Link, useNavigate } from 'react-router'
+import LoadingButton from '../utils/LodingButton'
+import { clearState } from '../redux/slices/authSlice'
 
 export const Login = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-
+    const navigate = useNavigate()
     const dispatch = useDispatch()
-    const { token } = useSelector(state => state.auth)
-const navigate = useNavigate()
-
+    const { token, error, loading, isLogged } = useSelector(state => state.auth)
 
 
     const hendelLogin = (e) => {
         e.preventDefault()
         dispatch(loginUser({ email, password }))
-        setEmail("")
-        setPassword("")
     }
 
-    useEffect(()=>{
-          if(token){
-              navigate("/")
-          }
-    },[dispatch,token ])
+    useEffect(() => {
+        if (token) {
+            navigate("/")
+            setEmail("")
+            setPassword("")
+        }
+    }, [dispatch, token])
     return (
         <section className="py-10 bg-gray-50 sm:py-16 lg:py-24">
             <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -36,10 +36,11 @@ const navigate = useNavigate()
                 <div className="relative max-w-md mx-auto mt-8 md:mt-16">
                     <div className="overflow-hidden bg-white rounded-md shadow-md">
                         <div className="px-4 py-6 sm:px-8 sm:py-7">
-                            <form onSubmit={hendelLogin} >
+                            {error && <p className='text-red-500 py-2'>{error}</p>}
+                            <form onSubmit={hendelLogin}>
                                 <div className="space-y-5">
                                     <div>
-                                        <label for="" className="text-base font-medium text-gray-900"> Email address </label>
+                                        <label className="text-base font-medium text-gray-900"> Email address </label>
                                         <div className="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
                                             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                                 <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -48,6 +49,7 @@ const navigate = useNavigate()
                                             </div>
 
                                             <input
+                                                value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
                                                 required
                                                 type="email"
@@ -59,9 +61,7 @@ const navigate = useNavigate()
 
                                     <div>
                                         <div className="flex items-center justify-between">
-                                            <label for="" className="text-base font-medium text-gray-900"> Password </label>
-
-                                            <a href="#" title="" className="text-sm font-medium text-orange-500 transition-all duration-200 hover:text-orange-600 focus:text-orange-600 hover:underline"> Forgot password? </a>
+                                            <label className="text-base font-medium text-gray-900"> Password </label>
                                         </div>
                                         <div className="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
                                             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -78,6 +78,7 @@ const navigate = useNavigate()
                                             <input
                                                 onChange={(e) => setPassword(e.target.value)}
                                                 required
+                                                value={password}
                                                 type="password"
                                                 placeholder="Enter your password"
                                                 className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600"
@@ -85,14 +86,10 @@ const navigate = useNavigate()
                                         </div>
                                     </div>
 
-                                    <div>
-                                        <button type="submit" className="inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md focus:outline-none hover:bg-blue-700 focus:bg-blue-700">
-                                            Log in
-                                        </button>
-                                    </div>
+                                    <LoadingButton loading={loading} type = "submit">Login</LoadingButton>
 
                                     <div className="text-center">
-                                        <p className="text-base text-gray-600">Don’t have an account? <Link to="/register" title="" className="font-medium text-orange-500 transition-all duration-200 hover:text-orange-600 hover:underline">Create a free account</Link></p>
+                                        <p className="text-base text-gray-600">Don’t have an account? <Link onClick={()=>dispatch(clearState())} to="/register" className="font-medium text-orange-500 transition-all duration-200 hover:text-orange-600 hover:underline">Create a free account</Link></p>
                                     </div>
                                 </div>
                             </form>

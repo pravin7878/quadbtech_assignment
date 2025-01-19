@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
+import UserProfileIcon from "../utils/UserProfileIcon";
+import { IoIosArrowDropdownCircle, IoIosArrowDropupCircle } from "react-icons/io";
+import { logout } from "../redux/slices/authSlice";
 
 const Menu = (props) => {
     const { children, items } = props
@@ -40,8 +44,10 @@ const Menu = (props) => {
     )
 }
 
-const Sidebar = ({ isSidebarOpen,toggleSidebar }) => {
-    const [username, setusername] = useState("")
+const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
+    const { user } = useSelector(state => state?.auth)
+    const [isActive, setisActive] = useState(false)
+    const dispatch = useDispatch()
     const todayTask = 0
     const navigation = [
         {
@@ -96,64 +102,33 @@ const Sidebar = ({ isSidebarOpen,toggleSidebar }) => {
         }
     ]
 
-    const nestedNav = [{ name: "Cards", href: "#", icon: "" }, { name: "Chekouts", href: "javascript:void(0)", icon: "" }, { name: "Payments", href: "javascript:void(0)", icon: "" }, { name: "Get paid", href: "javascript:void(0)", icon: "" }]
+    const handelLogout= ()=>{
+        dispatch(logout())
+        toggleSidebar()
+    }
 
-    const profileRef = useRef()
-
-    const [isProfileActive, setIsProfileActive] = useState(false)
-
-    useEffect(() => {
-        const handleProfile = (e) => {
-            if (profileRef.current && !profileRef.current.contains(e.target)) setIsProfileActive(false)
-        }
-        document.addEventListener('click', handleProfile)
-    }, [])
 
     return (<>
         {/* md and below screen sidebar */}
-        <div className="hidden md:flex flex-col h-full bg-green-50 px-4 border-r-2 gap-2">
-            <div className='h-20 flex items-center pl-2'>
-                <div className="w-full flex items-center gap-x-4 bg-white py-3 mt-1 shadow-md rounded-sm">
-                    <img src="https://randomuser.me/api/portraits/women/79.jpg" className="w-10 h-10 rounded-full" />
-                    <div>
-                        <span className="block text-gray-700 text-sm font-semibold">Hey,{username}</span>
-                       
+        <div className="hidden md:flex flex-col h-full bg-green-50 px-4 border-r-2 gap-2 ">
+            <div className='mt-2 p-2 rounded-md bg-white shadow-lg '>
+                {user ?
+                    <div className="w-full px-2 flex flex-col bg-white">
+                        <div className="flex justify-between items-center">
+                            <span className="p-2"><UserProfileIcon user={user} /></span>
+                            <span onClick={() => setisActive(!isActive)} className="cursor-pointer">
+                                {isActive ? <IoIosArrowDropdownCircle /> : <IoIosArrowDropupCircle />}
+                            </span>
+                        </div>
+                        <div className={` w-full gap-3 py-2 px-3 justify-end ${isActive ? "flex" : "hidden"}`}>
+                            <button onClick={() =>dispatch(logout())} className="bg-black text-white font-bold px-2 py-1 rounded-md cursor-pointer">Logout</button>
+                        </div>
                     </div>
-                    <div className="relative flex-1 text-right">
-                        <button ref={profileRef} className="p-1.5 rounded-md text-gray-500 hover:bg-gray-50 active:bg-gray-100"
-                            onClick={() => setIsProfileActive(!isProfileActive)}
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                                <path fillRule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clipRule="evenodd" />
-                            </svg>
-                        </button>
-                        {
-                            isProfileActive ? (
-                                <div className="absolute z-10 top-12 right-0 w-64 rounded-lg bg-white shadow-md border text-sm text-gray-600">
-                                    <div className="p-2 text-left">
-                                        <span className="block text-gray-500/80 p-2">alivika@gmail.com</span>
-                                        <a href="javascript:void(0)" className="block w-full p-2 text-left rounded-md hover:bg-gray-50 active:bg-gray-100 duration-150">
-                                            Add another account
-                                        </a>
-                                        <div className="relative rounded-md hover:bg-gray-50 active:bg-gray-100 duration-150">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 absolute right-1 inset-y-0 my-auto pointer-events-none">
-                                                <path fillRule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clipRule="evenodd" />
-                                            </svg>
-                                            <select className="w-full cursor-pointer appearance-none bg-transparent p-2 outline-none">
-                                                <option disabled selected>Theme</option>
-                                                <option>Dark</option>
-                                                <option>Light</option>
-                                            </select>
-                                        </div>
-                                        <button className="block w-full p-2 text-left rounded-md hover:bg-gray-50 active:bg-gray-100 duration-150">
-                                            Logout
-                                        </button>
-                                    </div>
-                                </div>
-                            ) : ""
-                        }
+                    :
+                    <div className="w-full flex justify-center items-center gap-x-4 bg-white py-3 mt-1 shadow-md rounded-md">
+                        <Link className="bg-black text-white font-bold px-3 py-1 rounded-md cursor-pointer" to={"/login"}>Login</Link>
                     </div>
-                </div>
+                }
             </div>
             <div className="flex flex-col justify-between h-full overflow-auto ">
                 <div className="">
@@ -194,49 +169,27 @@ const Sidebar = ({ isSidebarOpen,toggleSidebar }) => {
         </div>
 
         {/* sm screen side bar  */}
-        <div  className="flex md:hidden flex-col h-full bg-green-50 px-4 border-r-2 gap-2">
-            <div className='h-20 flex items-center pl-2'>
-                <div className="w-full flex items-center gap-x-4 bg-white py-3 mt-1 shadow-md rounded-sm">
-                    <img src="https://randomuser.me/api/portraits/women/79.jpg" className="w-10 h-10 rounded-full" />
-                    <div>
-                        <span className="block text-gray-700 text-sm font-semibold">Hey,{username}</span>
-                       
+        <div className={`fixed h-screen w-[250px] bg-green-50 px-4 border-r-2 z-50 transform ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } transition-transform duration-5000 ease-in-out`}>
+            <div className='mt-2 p-2 rounded-md bg-white shadow-lg '>
+                {user ?
+                    <div className="w-full md:px-2 flex flex-col bg-white">
+                        <div className="flex justify-between items-center">
+                           <UserProfileIcon user={user} />
+                            <span onClick={() => setisActive(!isActive)} className="cursor-pointer">
+                                {isActive ? <IoIosArrowDropdownCircle /> : <IoIosArrowDropupCircle />}
+                            </span>
+                        </div>
+                        <div className={`w-full py-2  justify-end ${isActive ? "flex" : "hidden"}`}>
+                            <button onClick={handelLogout} className="bg-black text-white text-sm font-bold px-2 py-1 rounded-md cursor-pointer">Logout</button>
+                        </div>
                     </div>
-                    <div className="relative flex-1 text-right">
-                        <button ref={profileRef} className="p-1.5 rounded-md text-gray-500 hover:bg-gray-50 active:bg-gray-100"
-                            onClick={() => setIsProfileActive(!isProfileActive)}
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                                <path fillRule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clipRule="evenodd" />
-                            </svg>
-                        </button>
-                        {
-                            isProfileActive ? (
-                                <div className="absolute z-10 top-12 right-0 w-64 rounded-lg bg-white shadow-md border text-sm text-gray-600">
-                                    <div className="p-2 text-left">
-                                        <span className="block text-gray-500/80 p-2">alivika@gmail.com</span>
-                                        <a href="javascript:void(0)" className="block w-full p-2 text-left rounded-md hover:bg-gray-50 active:bg-gray-100 duration-150">
-                                            Add another account
-                                        </a>
-                                        <div className="relative rounded-md hover:bg-gray-50 active:bg-gray-100 duration-150">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 absolute right-1 inset-y-0 my-auto pointer-events-none">
-                                                <path fillRule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clipRule="evenodd" />
-                                            </svg>
-                                            <select className="w-full cursor-pointer appearance-none bg-transparent p-2 outline-none">
-                                                <option disabled selected>Theme</option>
-                                                <option>Dark</option>
-                                                <option>Light</option>
-                                            </select>
-                                        </div>
-                                        <button className="block w-full p-2 text-left rounded-md hover:bg-gray-50 active:bg-gray-100 duration-150">
-                                            Logout
-                                        </button>
-                                    </div>
-                                </div>
-                            ) : ""
-                        }
+                    :
+                    <div className="w-full flex justify-center items-center gap-x-4 bg-white py-3 mt-1 shadow-md rounded-md">
+                        <Link onClick={toggleSidebar} className="bg-black text-white font-bold px-3 py-1 rounded-md cursor-pointer" to={"/login"}>Login</Link>
                     </div>
-                </div>
+                }
             </div>
             <div className="flex flex-col justify-between h-full overflow-auto ">
                 <div className="">

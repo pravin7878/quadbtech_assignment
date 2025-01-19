@@ -9,29 +9,29 @@ import { GiSmokingPipe } from "react-icons/gi";
 const Layout = () => {
     const [isGrid, setisGrid] = useState(false)
     const [isDark, setisDark] = useState(false)
-    const [isSideberOpen, setisSideberOpen] = useState(true)
+    const [isSideberOpen, setisSideberOpen] = useState(false)
 
     const togleSidebar = () => {
         setisSideberOpen(!isSideberOpen)
     }
 
-    // useEffect(() => {
-    //     // Function to check screen size and update state
-    //     const handleResize = () => {
-    //         const isMediumScreen = window.matchMedia('(min-width: 768px)').matches;
-    //         setisSideberOpen(isMediumScreen);
-    //     };
+    useEffect(() => {
+        // Function to check screen size and update state
+        const handleResize = () => {
+            const isMediumScreen = window.matchMedia('(min-width: 768px)').matches;
+            setisSideberOpen(isMediumScreen);
+        };
 
 
-    //     handleResize();
+        handleResize();
 
-    //     window.addEventListener('resize', handleResize);
+        window.addEventListener('resize', handleResize);
 
 
-    //     return () => {
-    //         window.removeEventListener('resize', handleResize);
-    //     };
-    // }, []);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
     return (
         <div className={`grid grid-rows-[auto_1fr_auto] h-screen relative grid-cols-[25%_75%] ${isSideberOpen ? "grid-areas-layout_sm md:grid-areas-layout_md" : "grid-areas-layout_sm"} `}>
             <nav className="sticky top-0 grid-in-navbar">

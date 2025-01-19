@@ -1,22 +1,35 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../redux/actions/user";
+import { Link, useNavigate } from "react-router";
+import LoadingButton from "../utils/LodingButton";
+import { clearState } from "../redux/slices/authSlice";
 
 export const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const { success, error, loading} = useSelector(state => state.auth)
+console.log(success);
 
   const handleRegister = (e) => {
     e.preventDefault();
-    console.log(name, email, password);
-
+    
     // Dispatch the registration action
     dispatch(registerUser({ name, email, password }));
   };
 
+  useEffect(()=>{
+    if(success){
+      setEmail("")
+      setName("")
+      setPassword("")
+      navigate("/login")
+      dispatch(clearState())
+    }
+  },[success])
   return (
     <section className="py-10 bg-gray-50 sm:py-16 lg:py-24">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -32,6 +45,7 @@ export const Register = () => {
         <div className="relative max-w-md mx-auto mt-8 md:mt-16">
           <div className="overflow-hidden bg-white rounded-md shadow-md">
             <div className="px-4 py-6 sm:px-8 sm:py-7">
+              {error && <p className="text-red-500 py-2">{error}</p>}
               <form onSubmit={handleRegister}>
                 <div className="space-y-5">
                   {/* Name Field */}
@@ -132,20 +146,21 @@ export const Register = () => {
 
                   {/* Submit Button */}
                   <div>
-                    <button
+                    <LoadingButton
+                      loading={loading}
                       type="submit"
                       className="inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md focus:outline-none hover:bg-blue-700 focus:bg-blue-700"
                     >
                       Register
-                    </button>
+                    </LoadingButton>
                   </div>
 
                   <div className="text-center">
                     <p className="text-base text-gray-600">
                       Already have an account?{" "}
                       <Link
+                        onClick={() => dispatch(clearState())}
                         to="/login"
-                        title=""
                         className="font-medium text-orange-500 transition-all duration-200 hover:text-orange-600 hover:underline"
                       >
                         Log in
