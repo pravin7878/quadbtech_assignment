@@ -61,8 +61,8 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
             icon: ""
         },
         {
-            path: '/today-task',
-            name: 'Today',
+            path: '/in-complete',
+            name: 'In-Complete',
             icon: ""
         },
         {

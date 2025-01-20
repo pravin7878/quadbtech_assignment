@@ -1,16 +1,34 @@
-const LoadingButton = ({ type,children,loading , chickHandler}) => {
+import React from "react";
+import clsx from "clsx";
+
+const LoadingButton = ({
+    type = "button",
+    children,
+    loading = false,
+    chickHandler,
+    size = "w-full",
+    textColor = "text-white",
+    bgColor = "bg-blue-500",
+    hoverColor = "hover:bg-blue-700",
+}) => {
     return (
         <div>
             <button
                 type={type}
                 onClick={chickHandler}
-                disabled={loading} 
-                className={`inline-flex items-center justify-center w-full m-auto px-4 py-2 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md focus:outline-none hover:bg-blue-700 focus:bg-blue-700 ${loading ? "opacity-75 cursor-not-allowed" : ""
-                    }`}
+                disabled={loading}
+                className={clsx(
+                    "inline-flex items-center justify-center m-auto px-4 py-2 text-base font-semibold transition-all duration-200 border border-transparent rounded-md focus:outline-none",
+                    size,
+                    textColor,
+                    bgColor,
+                    hoverColor,
+                    loading && "opacity-75 cursor-not-allowed"
+                )}
             >
                 {loading ? (
                     <svg
-                        className="w-5 h-5 animate-spin text-white"
+                        className="w-5 h-5 animate-spin"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
@@ -30,7 +48,7 @@ const LoadingButton = ({ type,children,loading , chickHandler}) => {
                         ></path>
                     </svg>
                 ) : (
-                        children
+                    children
                 )}
             </button>
         </div>

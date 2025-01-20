@@ -21,7 +21,9 @@ useEffect(()=>{
              </div> 
              :
                  items?.map((task,idx)=>{
-                     return <TaskCard key={idx} task={task} />
+                     if (task.priority === "high"){
+                         return <TaskCard key={idx} task={task} />
+                     }
                  }) 
            
              }

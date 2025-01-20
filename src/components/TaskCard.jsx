@@ -1,82 +1,104 @@
-import React, { useState } from "react";
-import { FaRegStar, FaStar } from 'react-icons/fa'
-import { MdDeleteForever } from 'react-icons/md';
+import React from "react";
+import { FaRegStar, FaStar } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTodo } from "../redux/actions/task";
+import { deleteTodo, updateTodo } from "../redux/actions/task";
 
-export const TaskCard = ({ task,  onChangePriority }) => {
-  const [priority, setPriority] = useState(task?.priority);
-const dispatch = useDispatch()
-const {token} = useSelector(state=>state.auth)
-console.log(priority);
+export const TaskCard = ({ task }) => {
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
 
   const handlePriorityChange = () => {
-    const newPriority =
-      priority === "low" ? "medium" : priority === "medium" ? "high" : "low";
-    setPriority(newPriority);
-    onChangePriority(task._id, newPriority);
+    const newPriority = task.priority === "low" || task.priority === "medium" ? "high" : "low";
+
+    dispatch(
+      updateTodo({
+        token,
+        id: task._id,
+        data: { ...task, priority: newPriority },
+      })
+    );
+  };
+
+  const handleDelete = () => {
+    dispatch(deleteTodo({ token, id: task._id }));
+  };
+
+  const handleStatus = () => {
+    const newProgress = task.progress === "pending" ? "completed" : "pending";
+
+    dispatch(
+      updateTodo({
+        token,
+        id: task._id,
+        data: { ...task, progress: newProgress },
+      })
+    );
   };
 
   return (
     <div className="bg-white flex justify-between items-center shadow-md rounded-lg p-5 mb-4 border">
-      <div >
-        <span className='flex gap-2 items-center'>
-          <input type="checkbox" className='p-3 cursor-pointer text-md' />
+      <div>
+        {/* Task Title and Deadline */}
+        <div className="flex gap-2 items-center">
+          <input
+            type="checkbox"
+            checked={task.progress === "completed"}
+            onChange={handleStatus}
+            className="cursor-pointer"
+            aria-label="Toggle Task Status"
+          />
           <h3 className="text-lg font-bold text-gray-800">{task.title}</h3>
+        </div>
 
-          <p className="text-sm text-gray-500 ">
-            Deadline:{" "}
-            <span className="text-gray-800 font-semibold">
-              {new Date(task.deadline).toLocaleDateString()}
-            </span>
-          </p>
-        </span>
+        <p className="text-sm text-gray-500">
+          Deadline:{" "}
+          <span className="text-gray-800 font-semibold">
+            {new Date(task.deadline).toLocaleDateString()}
+          </span>
+        </p>
 
-        <span className='pl-5 flex gap-2 item-center '>
-          {/* Task Priority */}
-          <p className="text-sm text-gray-500 ">
+        {/* Task Priority and Progress */}
+        <div className="flex gap-4 mt-2">
+          <p className="text-sm text-gray-500">
             Priority:{" "}
             <span
-              className={`font-semibold ${priority === "high"
-                ? "text-red-600"
-                : priority === "medium"
-                  ? "text-yellow-500"
-                  : "text-green-600"
+              className={`font-semibold ${task.priority === "high"
+                  ? "text-red-600"
+                  : task.priority === "medium"
+                    ? "text-yellow-500"
+                    : "text-green-600"
                 }`}
             >
-              {priority}
+              {task.priority}
             </span>
           </p>
-          {/* Task Progress */}
-          <p className="text-sm text-gray-500 ">
+          <p className="text-sm text-gray-500">
             Progress:{" "}
             <span
-              className={`font-semibold ${task?.progress === "pending"
-                ? "text-yellow-500"
-                : "text-green-600"
+              className={`font-semibold ${task.progress === "pending" ? "text-yellow-500" : "text-green-600"
                 }`}
             >
-              {task?.progress}
+              {task.progress}
             </span>
           </p>
-        </span>
+        </div>
       </div>
 
       {/* Buttons */}
-      <div className="mt-4 flex gap-4">
+      <div className="flex gap-4">
         {/* Delete Button */}
-        <button
-          onClick={() => dispatch(deleteTodo({ token , id : task._id}))}
-        >
-          <MdDeleteForever className='size-5 md:size-8'/>
+        <button onClick={handleDelete} aria-label="Delete Task">
+          <MdDeleteForever className="text-2xl text-red-600 hover:text-red-800" />
         </button>
 
         {/* Change Priority Button */}
-        <button
-          onClick={handlePriorityChange}
-        >
-          {<FaRegStar className='size-5 md:size-8'/> ||
-            <FaStar className='size-5 md:size-8'/>}
+        <button onClick={handlePriorityChange} aria-label="Change Priority">
+          {task.priority === "low" || task.priority === "medium" ? (
+            <FaRegStar className="text-2xl text-yellow-500 hover:text-yellow-600" />
+          ) : (
+            <FaStar className="text-2xl text-yellow-600 hover:text-yellow-700" />
+          )}
         </button>
       </div>
     </div>
