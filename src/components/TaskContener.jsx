@@ -9,7 +9,7 @@ export const TaskContener = () => {
     const completedTask = items?.filter((task) => task.progress === "completed")
 
     return (
-        <div className='flex flex-col gap-5'>
+        <div className='flex flex-col gap-5 w-full max-w-3xl'>
             <>
                 <h3>Pending Task</h3>
                 {pendingTask.length === 0 ?

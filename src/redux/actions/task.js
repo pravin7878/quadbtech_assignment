@@ -1,19 +1,27 @@
 import {createAsyncThunk} from "@reduxjs/toolkit"
 
 import axios from "axios";
+import { toast } from "react-toastify";
+import { logout } from "../slices/authSlice";
+
 
 const API_URL = "https://task-manager-3745.onrender.com";
 
 // Thunks for CRUD operations
 export const fetchTodos = createAsyncThunk(
   "todos/fetchTodos",
-  async (token, { rejectWithValue }) => {
+  async ({ token, navigate }, { rejectWithValue , dispatch }) => {
     try {
       const response = await axios.get(`${API_URL}/todos`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return response.data;
     } catch (error) {
+      if (error.response.status === 401) {
+         dispatch(logout())
+        toast.error("Invalid Token , Please Login Again!")
+        navigate("/login");
+      }
       return rejectWithValue(error.response.data);
     }
   }

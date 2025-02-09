@@ -6,11 +6,18 @@ import Home from "../pagas/Home";
 import { AllRoute } from "./AllRoute";
 import { GiSmokingPipe } from "react-icons/gi";
 import Footer from "./Footer";
+import { RightSidebar } from "./RightSidebar";
 
 const Layout = () => {
     const [isGrid, setisGrid] = useState(false)
     const [isDark, setisDark] = useState(false)
     const [isSideberOpen, setisSideberOpen] = useState(false)
+    const [isOpen, setisOpen] = useState(true)
+
+    const onClose = () => {
+        setisOpen(!isOpen)
+    }
+
 
     const togleSidebar = () => {
         setisSideberOpen(!isSideberOpen)
@@ -41,7 +48,8 @@ const Layout = () => {
             <aside className={`${isSideberOpen ? null : "hidden"} grid-in-sidebar border-2  absolute top-[50px] w-[50%] md:w-full md:sticky h-[cals(100vh - 56px)] overflow-y-auto`} >
                 <Sidebar isSidebarOpen={isSideberOpen} toggleSidebar={togleSidebar} />
             </aside>
-            <main className="w-full h-200 grid-in-main overflow-y-auto">
+            <main className="w-full h-200 grid-in-main overflow-y-auto relative">
+                <RightSidebar isOpen={isOpen} onClose={onClose}/>
                 <AllRoute />
             </main>
             <footer className="grid-in-footer">

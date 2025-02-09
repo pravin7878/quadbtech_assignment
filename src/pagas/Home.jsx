@@ -4,18 +4,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchTodos } from "../redux/actions/task";
 import { Loading } from "../utils/Loading";
 import { TaskContener } from "../components/TaskContener";
+import { useNavigate } from "react-router";
 
 const Home = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { token } = useSelector(state => state.auth);
   const { items, isFetching, error } = useSelector(state => state.todos);
-  
+
 
   useEffect(() => {
     if (token) {
-      dispatch(fetchTodos(token));
+      dispatch(fetchTodos({ token, navigate }));
     }
-  }, [dispatch, token]);
+  }, [dispatch, token, navigate]);
 
   if (isFetching) {
     return (
@@ -27,10 +29,10 @@ const Home = () => {
 
   return (
     <>
-    <AddTask/>
-      <div className="px-2 py-3 flex flex-col justify-between rounded-md m-5">
+      <AddTask />
+      <div className="flex justify-center border-2 m-auto px-2 py-3 ">
         {error ? (
-          <div className="text-red-700 p-4">{error}</div>
+          <div className="text-red-700 p-4">{error.massage}</div>
         ) : items?.length === 0 ? (
           <div className="p-4">No task found</div>
         ) : (

@@ -3,10 +3,13 @@ import { FaRegStar, FaStar } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTodo, updateTodo } from "../redux/actions/task";
+import { onOpen } from "../redux/slices/sideBarSlice";
+import { BiSolidEdit } from "react-icons/bi";
 
 export const TaskCard = ({ task }) => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
+  const { isOpen } = useSelector((state) => state.sidebar);
 
   const handlePriorityChange = () => {
     const newPriority = task.priority === "low" || task.priority === "medium" ? "high" : "low";
@@ -37,7 +40,8 @@ export const TaskCard = ({ task }) => {
   };
 
   return (
-    <div className="bg-white flex justify-between items-center shadow-md rounded-lg p-5 mb-4 border">
+    <div 
+    className="bg-white flex justify-between items-center shadow-md rounded-lg p-5 mb-4 border">
       <div>
         {/* Task Title and Deadline */}
         <div className="flex gap-2 items-center">
@@ -87,11 +91,14 @@ export const TaskCard = ({ task }) => {
 
       {/* Buttons */}
       <div className="flex gap-4">
+        {!isOpen && <BiSolidEdit
+          onClick={() => dispatch(onOpen(task))}
+         className="text-2xl cursor-pointer" 
+         />}
         {/* Delete Button */}
         <button onClick={handleDelete} aria-label="Delete Task">
           <MdDeleteForever className="text-2xl text-red-600 hover:text-red-800" />
         </button>
-
         {/* Change Priority Button */}
         <button onClick={handlePriorityChange} aria-label="Change Priority">
           {task.priority === "low" || task.priority === "medium" ? (
